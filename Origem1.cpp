@@ -14,7 +14,7 @@ Processo criar_processo(int id, int tempo_execucao) {
 	return p;
 }
 
-int randoms(){
+int randoms() {
 	//semente
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -23,71 +23,47 @@ int randoms(){
 	std::uniform_int_distribution<int> distrib(500, 3000);
 	return distrib(gen);
 }
-int escalonamento(int id,int quantum){
-	Processo p;
-	switch (!terminou) {
-	case quantum < tempo_execucao: 
-		
-		executar_processo(id,quantum)
-		break;
-	case quantum > tempo_execucao:
-		executar_processo(id, tempo_execucao)
-			break;
-	break;
-	default: 
-		#include <iostream>
-#include <random>
-//por padrão struct é público
-struct Processo {
-	int id;
-	int tempo_execucao;
-	int terminou;
-};
-Processo executar_processo(int id, int tempo_execucao) {
-	Processo p;
-	p.id = id;
-	p.tempo_execucao = tempo_execucao;
-	p.terminou = 0;
-	return p;
-}
+void escalonamento(Processo& p id, int quantum) {
+	if (p.terminou) {
+		//finaliza o processo se ele terminar
+		return;
+	}
+	//print
+	std::cout << "\n[Processo " << p.id << "] Tempo restante: " << p.tempo_execucao << "ms | ";
 
-int randoms(){
-	//semente
-	std::random_device rd;
-	std::mt19937 gen(rd());
-
-	//distribui eentre 500-3000 ms
-	std::uniform_int_distribution<int> distrib(500, 3000);
-	return distrib(gen);
-}
-int escalonamento(int id,int quantum){
-	switch (!terminou) {
-	case quantum < tempo_execucao: 	
-		executar_processo(id, quantum);
-		tempo_execucao = quantum - tempo_execucao;
-		
-		break;
-	case quantum > tempo_execucao:
-		executar_processo(id, tempo_execucao);
-			break;
-	default:
-		executar_processo(id, quantum);
-		break;
+	if (quantum < p.tempo_execucao) {
+		std::cout << "Executando por " << quantum << "ms (Quantum expirou).";
+		p.tempo_execucao -= quantum;
+	}
+	else {
+		std::cout << "Executando por " << p.tempo_execucao << "ms e FINALIZADO.";
+		p.tempo_execucao = 0;
+		p.terminou = true;
 	}
 }
+
 int main() {
-	Processo vetor[8];
-	for (int i = 0;i < 8;++i) {
-		vetor[i]= status_processo(i + 1, randoms());
+	const int TOTAL_PROCESSOS = 8;
+	const int QUANTUM = 1000;
+	Processo vetor[TOTAL_PROCESSOS];
 
+	// Criação dos processos
+	for (int i = 0; i < TOTAL_PROCESSOS; ++i) {
+		vetor[i] = criar_processo(i + 1, gerar_tempo_aleatorio());
+		std::cout << "Processo " << vetor[i].id << " criado com " << vetor[i].tempo_execucao << "ms.\n";
 	}
-}
-	}
-}
-int main() {
-	Processo vetor[8];
-	for (int i = 0;i < 8;++i) {
-		vetor[i]= status_processo(i + 1, randoms());
 
+	std::cout << "\n--- Iniciando Escalonamento Round Robin (Quantum: " << QUANTUM << "ms) ---\n";
+
+	bool todos_terminaram = false;
+	while (!todos_terminaram) {
+		todos_terminaram = true;
+
+		for (int i = 0; i < TOTAL_PROCESSOS; ++i) {
+			if (!vetor[i].terminou) {
+				escalonamento(vetor[i], QUANTUM);
+				todos_terminaram = false;
+			}
+		}
 	}
-}
+

@@ -13,7 +13,7 @@ Este repositório é dedicado ao armazenamento de exercícios, exemplos e implem
 
 | Exercício / Módulo | Descrição das Atividades |
 | :--- | :--- |
-| **`Exemplo_01`** | Criando a primeira tarefa no FreeRTOS (`xTaskCreate`), loop infinito `for(;;)` e temporização com `vTaskDelay`. |
+| **`Exercício_01`** | Criação de três tarefas e aprendendo suas estruturações no FreeRTOS (`xTaskCreate`), loop infinito `for(;;)` e temporização com `vTaskDelay`. |
 | **`Múltiplas Tarefas`** | Execução concorrente de tarefas com diferentes frequências de delay e calculando o tempo de execução do sistema através da contagem de *ticks* (`xTaskGetTickCount`). |
 | **`Gerenciamento & Pilha`** | Monitoramento de uso de memória com `uxTaskGetStackHighWaterMark` e análise de prioridades do escalonador. |
 
